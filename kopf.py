@@ -17,10 +17,10 @@ Benötigt:
 
 # ---------- BIBS ----------
 
-from machine import Pin, PWM, SoftI2C
+from machine import Pin, PWM, SoftI2C, I2C
 from time import sleep_ms, ticks_ms, ticks_diff
 
-import bh1750
+from bh1750 import BH1750
 import ahtx0
 
 # ---------- INIT + VARS ----------
@@ -45,9 +45,9 @@ taster = Pin(20, Pin.IN)
 # ESP32 <-> i2c <-> Sensor Setup
 i2c0_sda = Pin(39)
 i2c0_scl = Pin(38)
-i2c0 = SoftI2C(sda=i2c0_sda, scl=i2c0_scl)
-bh_1750 = bh1750.BH1750(0x23, i2c0)
-i2c1_sda = Pin(44)
+i2c0 = I2C(0, sda=i2c0_sda, scl=i2c0_scl)
+bh1750 = BH1750(0x23, i2c0)
+i2c1_sda = Pin(42)
 i2c1_scl = Pin(41)
 i2c1 = SoftI2C(sda=i2c1_sda, scl=i2c1_scl)
 aht_10 = ahtx0.AHT10(i2c1)
@@ -58,22 +58,23 @@ def ausschalten(i):
     # das programm wird einmal ausgeschaltet
     if i == True:
         led_status.off()
-        led1.off()
+        dimmer(0)
         led2.off()
         led3.off()
 
 def read_brightness():                          #helligkeit auslesen und weitergeben
     try:
-        brightness = bh_1750.measurement
+        brightness = int(bh1750.measurement)
         return brightness
     except:
         print("Helligkeit via I2C konnte nicht gelesen werden")
+        return 0
 
-def read_ambient(i):                            #temp oder hunid auslesen und weitergeben
+def read_ambient():                            #temp oder hunid auslesen und weitergeben
     try:
         global temp, humid
-        temp = aht_10.temperature
-        humid = aht_10.relative_humidity
+        temp = int(aht_10.temperature)
+        humid = int(aht_10.relative_humidity)
     except:
         print("Temperatur oder Feuchte via I2C konnte nicht gelesen werden")
 
@@ -87,6 +88,7 @@ def dimmer(duty):
     
 # ---------- LOOP ----------
 
+
 while True:
     gedrueckt = taster.value()                              #taster einlesen
     LED_dimm.freq(pwm_freq)
@@ -99,12 +101,12 @@ while True:
         war_aus = True
     if status:
         time = ticks_ms()
-        if (ticks_diff(time, passed) > 100):                #programm wird jede 0.1s ausgeführt ohne sleep
+        if (ticks_diff(time, passed) > 100):    			# programm wird jede 0.1s ausgeführt ohne sleep
             run = not run
             led_status.on()
             # helligkeit auslesen und led dimmen
             brightness = (read_brightness())
-            duty = brightness * 0.2
+            duty = int(brightness * 0.5)					# maximale LED-helligkeit (duty) ab 2048 lux (brightness)  
             dimmer(duty)
             # aktuelle messwerte abfragen zur verwendung
             read_ambient()

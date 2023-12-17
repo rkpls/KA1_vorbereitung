@@ -10,6 +10,6 @@ i2c0 = I2C(0, sda=i2c0_sda, scl=i2c0_scl)
 bh1750 = BH1750(0x23, i2c0)
 
 while True:
-    brightness = bh1750.measurement
+    brightness = int(bh1750.measurement)
     print(brightness)
     sleep(1)
