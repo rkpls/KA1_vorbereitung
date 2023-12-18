@@ -1,7 +1,7 @@
 
 
 """
-Autor: Riko Pals
+Autor: Vorname Nachname
 Kurs: ETS23 Microcontroller - Micropython
 Klausur 1
 Datum: 19.12.2023
