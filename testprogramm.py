@@ -4,7 +4,9 @@ Kurs: ETS23 Microcontroller - Micropython
 Klausur 1
 Datum: 19.12.2023
 
-Ein Programm welches eine LED proportional zur Umgebungshelligkeit dimmt. Das Programm kann über einen Taster ein und ausgeschaltet werden.
+Ein Programm welches eine LED proportional zur Umgebungshelligkeit dimmt.
+Umgebungswerte in Temperatur und feuchte werden gelesen ausgewertet und als "OK" grüne LED oder "NOK" rote LED wiedergegeben.
+Das Programm kann über einen Taster ein und ausgeschaltet werden.
 
 Benötigt:
  - Espressif ESP32 S3
@@ -46,7 +48,8 @@ taster = Pin(20, Pin.IN)
 i2c0_sda = Pin(39)
 i2c0_scl = Pin(38)
 i2c0 = I2C(0, sda=i2c0_sda, scl=i2c0_scl)
-bh1750 = BH1750(0x23, i2c0) 
+bh1750 = BH1750(0x23, i2c0)
+
 i2c1_sda = Pin(42)
 i2c1_scl = Pin(41)
 i2c1 = SoftI2C(sda=i2c1_sda, scl=i2c1_scl)
@@ -54,9 +57,9 @@ aht_10 = ahtx0.AHT10(i2c1)
 
 # ---------- FUNCTIONS ----------
 
-def ausschalten(i):
+def ausschalten(soll_aus):
     # das programm wird einmal ausgeschaltet
-    if i == True:
+    if soll_aus == True:
         led_status.off()
         dimmer(0)
         led2.off()
@@ -110,7 +113,7 @@ while True:
             dimmer(duty)
             # aktuelle messwerte abfragen zur verwendung
             read_ambient()
-            # bei kritische werte LEDs schalten
+            # bei "kritische" werte LEDs schalten
             if temp <= 25 and humid <= 70:
                 led2.on()
                 led3.off()

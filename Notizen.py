@@ -1,11 +1,6 @@
 
 
 """
-Autor: Vorname Nachname
-Kurs: ETS23 Microcontroller - Micropython
-Klausur 1
-Datum: 19.12.2023
-
 Notizen
 ----------
 Pinbelegung 
@@ -23,23 +18,24 @@ SCL - 38
 SDA - 39
 ADDR - none
 ---------
-LED
+LEDs
 35
 36
 47
 48
 
-PIN - LED - + 220R - 0V
+PIN -> LED -> 220R -> GND
+oder
+PIN -> 220R -> LED -> GND
 ---------
 Taster 
 Pin 20
-PullDOWM (standard 0V an Pin)
-           Pin - 1k / 2k R - 0
-+ 3.3 - Taster - 
-PullUP
-
-       Pin - 1k / 2k R - +3.3
-0 - Taster - 
+PullDOWN: (standard, Pin an GND "gezogen")
+            Pin | 1k / 2k R -> GND
++ 3.3 -> Taster | 
+PullUP:
+          Pin | 1k / 2k R <- +3.3
+GND <- Taster | 
 ----------
 
 """

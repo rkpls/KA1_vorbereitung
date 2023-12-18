@@ -15,7 +15,7 @@ led2.on()
 while True:
     gedrueckt = taster.value()          #wertzuweisung status taster
     time.sleep_ms(entprell)             #entstören
-    print(gedrueckt)
+    print(gedrueckt)                    #spammt taster wert zur kontrolle 
     
     if gedrueckt and war_aus:           #wenn Tasterstatus wechselt
         status = not status             #Toggle led status wert
