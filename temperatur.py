@@ -4,10 +4,7 @@ from machine import Pin, SoftI2C
 
 import ahtx0
 
-#i2c Pins
 i2c = SoftI2C(scl=Pin(41), sda=Pin(42))
-
-# Create the sensor object using I2C
 aht10 = ahtx0.AHT10(i2c)
 
 while True:
